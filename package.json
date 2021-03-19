@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "socks-proxy-agent": "^5.0.0",
+    "telegraf": "^4.3.0"
+  }
+}
