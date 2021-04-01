@@ -34,6 +34,20 @@ var download = function (url, dest, cb) {
   });
 };
 
+var reply = function (ctx, msg) {
+  const max_size = 4096;
+  var amount_sliced = msg.length / max_size;
+  var start = 0;
+  var end = max_size;
+  var message;
+  for (let i = 0; i < amount_sliced; i++) {
+    message = msg.slice(start, end);
+    ctx.reply(message);
+    start = start + max_size;
+    end = end + max_size;
+  }
+};
+
 function handle_document(ctx) {
   if (ctx.message.document?.file_size < 20 * 1024 * 1024) {
     bot.telegram.getFileLink(ctx.message.document.file_id).then((url) => {
@@ -50,15 +64,14 @@ function handle_document(ctx) {
 }
 
 function handle_text(ctx) {
-  var cmd = ctx.message.text;
-  if (cmd.startsWith("/")) {
-    cmd = cmd.replace("/", "./BaiduPCS-Go ");
-  }
-  exec(cmd, (error, stdout, stderr) => {
-    if (stdout && stdout.trim("\n")) {
-      ctx.reply(stdout);
+  exec(
+    process.env.cmd_path + " " + ctx.message.text,
+    (error, stdout, stderr) => {
+      if (stdout && stdout.trim("\n")) {
+        reply(ctx, stdout);
+      }
     }
-  });
+  );
 }
 
 bot.start((ctx) => ctx.reply("Welcome use sydown bot"));
