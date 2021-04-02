@@ -66,18 +66,19 @@ function handle_document(ctx) {
 
 function handle_text(ctx) {
   console.log(`receive message: ${ctx.message.text}`);
-  exec(
-    process.env.cmd_path + " " + ctx.message.text,
-    (error, stdout, stderr) => {
-      if (stdout && stdout.trim("\n")) {
-        reply(ctx, stdout);
-      }
+  // disable run..
+  var msg = ctx.message.text.replace("run", "");
+  exec(process.env.cmd_path + " " + msg, (error, stdout, stderr) => {
+    if (stdout && stdout.trim("\n")) {
+      reply(ctx, stdout);
     }
-  );
+  });
 }
 
-bot.start((ctx) => reply(ctx,'Welcome use sydown bot') );
-bot.help((ctx) =>reply(ctx,'forward me any type file link to enable download') );
+bot.start((ctx) => reply(ctx, "Welcome use sydown bot"));
+bot.help((ctx) =>
+  reply(ctx, "forward me any type file link to enable download")
+);
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
