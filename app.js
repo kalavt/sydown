@@ -80,7 +80,6 @@ bot.help((ctx) =>
   reply(ctx, "forward me any type file link to enable download")
 );
 
-// Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
 bot.launch();
