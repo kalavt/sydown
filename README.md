@@ -14,4 +14,3 @@ download_folder= file download folder
 
 cmd_path= path to BaiduPCS-Go 
 
-Next step: dockerlization....
