@@ -63,7 +63,8 @@ function handle_baidu(ctx) {
     );
     if (url_match.length > 0) {
       url_match.forEach((item, index) => {
-        execBaiduPcsGO(`transfer ${item} ${code_match[index]}`)
+        var cmd = `transfer ${item} ${code_match[index]}`;
+        execBaiduPcsGO(cmd);
       });
       return true;
     }
@@ -89,6 +90,7 @@ function handle_text(ctx) {
   console.log(`receive message: ${ctx.message.text}`);
 
   if (handle_baidu(ctx)) {
+    reply(ctx, "handled by baidu");
     return;
   }
   // disable run..
