@@ -49,6 +49,27 @@ var download = function (url, dest, cb) {
   });
 };
 
+function handle_baidu(ctx) {
+  var url_regex = /链接：(?<grp0>[^ ]+)/gi;
+  var code_regex = /提取码：(?<grp1>[\w]{4})/gi;
+  if (ctx.message.text) {
+    var url_match = Array.from(
+      ctx.message.text.matchAll(url_regex),
+      (m) => m[1]
+    );
+    var code_match = Array.from(
+      ctx.message.text.matchAll(code_regex),
+      (m) => m[1]
+    );
+    if (url_match.length > 0) {
+      url_match.forEach((item, index) => {
+        execBaiduPcsGO(`transfer ${item} ${code_match[index]}`)
+      });
+      return true;
+    }
+  }
+}
+
 function handle_document(ctx) {
   if (ctx.message.document?.file_size < 20 * 1024 * 1024) {
     bot.telegram.getFileLink(ctx.message.document.file_id).then((url) => {
@@ -66,9 +87,17 @@ function handle_document(ctx) {
 
 function handle_text(ctx) {
   console.log(`receive message: ${ctx.message.text}`);
+
+  if (handle_baidu(ctx)) {
+    return;
+  }
   // disable run..
   var msg = ctx.message.text.replace("run", "");
-  exec(process.env.cmd_path + " " + msg, (error, stdout, stderr) => {
+  execBaiduPcsGO(ctx, msg);
+}
+
+function execBaiduPcsGO(cmd) {
+  exec(process.env.cmd_path + " " + cmd, (error, stdout, stderr) => {
     if (stdout && stdout.trim("\n")) {
       reply(ctx, stdout);
     }
@@ -83,3 +112,5 @@ bot.help((ctx) =>
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
 bot.launch();
+
+exports.handle_baidu = handle_baidu;
