@@ -79,7 +79,7 @@ function handle_document(ctx) {
         ctx.message.document.file_name
       );
       download(url.href, file, () => {
-        console.log("done");
+        reply(ctx,`download ${ctx.message.document.file_name} completed.`)
       });
     });
   }
