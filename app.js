@@ -63,8 +63,7 @@ function handle_baidu(ctx) {
     );
     if (url_match.length > 0) {
       url_match.forEach((item, index) => {
-        var cmd = `transfer ${item} ${code_match[index]}`;
-        execBaiduPcsGO(ctx,cmd);
+        execBaiduPcsGO(ctx,`transfer ${item} ${code_match[index]}`);
       });
       return true;
     }
@@ -90,7 +89,6 @@ function handle_text(ctx) {
   console.log(`receive message: ${ctx.message.text}`);
 
   if (handle_baidu(ctx)) {
-    reply(ctx, "handled by baidu");
     return;
   }
   // disable run..
@@ -99,6 +97,7 @@ function handle_text(ctx) {
 }
 
 function execBaiduPcsGO(ctx,cmd) {
+  console.log(cmd);
   exec(process.env.cmd_path + " " + cmd, (error, stdout, stderr) => {
     if (stdout && stdout.trim("\n")) {
       reply(ctx, stdout);
