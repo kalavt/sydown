@@ -64,7 +64,7 @@ function handle_baidu(ctx) {
     if (url_match.length > 0) {
       url_match.forEach((item, index) => {
         var cmd = `transfer ${item} ${code_match[index]}`;
-        execBaiduPcsGO(cmd);
+        execBaiduPcsGO(ctx,cmd);
       });
       return true;
     }
@@ -98,7 +98,7 @@ function handle_text(ctx) {
   execBaiduPcsGO(ctx, msg);
 }
 
-function execBaiduPcsGO(cmd) {
+function execBaiduPcsGO(ctx,cmd) {
   exec(process.env.cmd_path + " " + cmd, (error, stdout, stderr) => {
     if (stdout && stdout.trim("\n")) {
       reply(ctx, stdout);
